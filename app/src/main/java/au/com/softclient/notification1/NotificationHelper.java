@@ -3,8 +3,10 @@ package au.com.softclient.notification1;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -48,13 +50,22 @@ public class NotificationHelper extends ContextWrapper {
         manager.createNotificationChannel(notificationChannel1);
     }
 
-    public void sendHighPriorityNotification(String title, String body) {
+    public void sendHighPriorityNotification(String title, String body, Class activityname) {
+
+        Intent intent = new Intent(this, activityname);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        // Use FLAG_IMMUTABLE to create a PendingIntent for starting an activity
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_IMMUTABLE);
+
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setSmallIcon(R.drawable.baseline_notifications_active_24)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(title).bigText(body))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
                 .build();
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
