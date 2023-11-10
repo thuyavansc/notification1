@@ -9,6 +9,8 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -32,6 +34,14 @@ public class NotificationHelper extends ContextWrapper {
     private String CHANNEL_NAME = "High Priority Channel";
     //private String CHANNEL_ID = "au.com.softclient.notification1" + CHANNEL_NAME;
     private String CHANNEL_ID = "au.com.softclient.notification1.HighPriority";
+    //private Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+    // Load the custom sound from resources
+    //private Uri uri2 = Uri.parse("android.resource://au.com.softclient.notification1.R.raw.samsung_bird_ringtone");
+    //private Uri uri2 = Uri.parse("android.resource://au.com.softclient.notification1/raw/samsung_bird_ringtone");
+    private Uri uri2 = Uri.parse("android.resource://au.com.softclient.notification1/" + R.raw.samsung_bird_ringtone);
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createChannels() {
@@ -66,6 +76,7 @@ public class NotificationHelper extends ContextWrapper {
                 .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(title).bigText(body))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
+                .setSound(uri2)
                 .build();
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
